@@ -1,12 +1,9 @@
 package modelo;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class Inventario {
-    // Usamos un HashMap para guardar los Items y su cantidad.
-   
-    private Map<Item, Integer> items;
+    private HashMap<Item, Integer> items; //Integer es la clase envoltorio para int, y lo uso ya que HashMap solo se utiliza objetos y Integer es la forma objeto de Int
 
     public Inventario() {
         this.items = new HashMap<>();
@@ -14,7 +11,14 @@ public class Inventario {
 
     // Método para añadir un ítem al inventario
     public void agregarItem(Item item, int cantidad) {
-        items.put(item, items.getOrDefault(item, 0) + cantidad);
+        // Obtenemos la cantidad actual. Si el ítem no existe, su cantidad es 0.
+        int cantidadActual = 0;
+        if (items.containsKey(item)) {
+            cantidadActual = items.get(item);
+        }
+        
+        // Sumamos la nueva cantidad
+        items.put(item, cantidadActual + cantidad);
         System.out.println("Has añadido " + cantidad + "x " + item.getNombre() + " a tu inventario.");
     }
 
@@ -25,7 +29,7 @@ public class Inventario {
             if (cantidadActual >= cantidad) {
                 items.put(item, cantidadActual - cantidad);
                 if (items.get(item) <= 0) {
-                    items.remove(item); // Si la cantidad llega a 0 o menos, elimina el ítem del mapa
+                    items.remove(item); // Si la cantidad llega a 0 o menos, elimina el ítem del HashMapa
                 }
                 System.out.println("Has quitado " + cantidad + "x " + item.getNombre() + " de tu inventario.");
                 return true;
@@ -41,7 +45,12 @@ public class Inventario {
 
     // Método para obtener la cantidad de un ítem
     public int getCantidad(Item item) {
-        return items.getOrDefault(item, 0);
+        // Si el ítem no existe, su cantidad es 0.
+        if (items.containsKey(item)) {
+            return items.get(item);
+        } else {
+            return 0;
+        }
     }
 
     // Método para verificar si el inventario está vacío
@@ -50,7 +59,7 @@ public class Inventario {
     }
 
     // Método para obtener todos los items del inventario (con sus cantidades)
-    public Map<Item, Integer> getItems() {
+    public HashMap<Item, Integer> getItems() {
         return items;
     }
 
@@ -61,7 +70,7 @@ public class Inventario {
             return;
         }
         System.out.println("\n--- Tu Inventario ---");
-        for (Map.Entry<Item, Integer> entry : items.entrySet()) {
+        for (HashMap.Entry<Item, Integer> entry : items.entrySet()) {
             Item item = entry.getKey();
             int cantidad = entry.getValue();
             System.out.println("- " + item.getNombre() + " x" + cantidad + " (" + item.getTipo() + ")");
